@@ -14,19 +14,19 @@ def main():
     now = datetime.datetime.now()
 
     try:
-        for dirs, dirname, files in os.walk(DIRECTORY_TO_EXAMINE):
-            # print("DIRS: {}".format(dirs))
-            # print("\t{}".format(dirname))
+        for root, dirnames, files in os.walk(DIRECTORY_TO_EXAMINE):
+            # print("DIRS: {}".format(root))
+            # print("\t{}".format(dirnames))
             # print("\t{}".format(files))
             for item in DIRECTORIES_TO_SKIP:
-                if item in dirname:
-                    dirname.remove(item)
-                    print("\t\tFolder removed from dirname: {}".format(item))
-                    print("\t\tdirname is now: {}".format(dirname))
+                if item in dirnames:
+                    dirnames.remove(item)
+                    print("\t\tFolder removed from dirnames: {}".format(item))
+                    print("\t\tdirnames is now: {}".format(dirnames))
 
             # For each directory, look at the residing folders and files. Begin with folders first.
-            for folder in dirname:
-                full_folder_path = os.path.join(dirs, folder)
+            for folder in dirnames:
+                full_folder_path = os.path.join(root, folder)
                 # For folders in the directory, check to see if they are in the skip list. If not, process them
                 if os.path.basename(folder) in DIRECTORIES_TO_SKIP:
                     print("Skipping {}".format(folder))
@@ -42,7 +42,7 @@ def main():
             for file in files:
 
                 # For files in the directory, process them.
-                full_file_path = os.path.join(dirs, file)
+                full_file_path = os.path.join(root, file)
                 time_file_last_modified = os.path.getmtime(full_file_path)
                 duration_since_file_last_modified = now - datetime.datetime.fromtimestamp(time_file_last_modified)
                 is_older_than_five_days = duration_since_file_last_modified >= FIVE_DAYS_TIME
