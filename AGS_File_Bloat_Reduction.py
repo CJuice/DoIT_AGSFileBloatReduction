@@ -37,11 +37,14 @@ def main():
                 full_folder_path = os.path.join(root, folder)
                 time_dir_last_modified = os.path.getmtime(full_folder_path)
                 duration_since_folder_last_modified = now - datetime.datetime.fromtimestamp(time_dir_last_modified)
-                print("Folder: {} , Age: {}".format(full_folder_path, duration_since_folder_last_modified))
+                # print("Folder: {} , Age: {}".format(full_folder_path, duration_since_folder_last_modified))
                 is_older_than_five_days = duration_since_folder_last_modified > FIVE_DAYS_TIME
                 if is_older_than_five_days:
-                    os.remove(folder)
-                    print("\tFOLDER: {} has been removed. Age: {}".format(full_folder_path, duration_since_folder_last_modified))
+                    try:
+                        os.remove(full_folder_path)
+                        print("FOLDER: {} REMOVED. Age: {}".format(full_folder_path, duration_since_folder_last_modified))
+                    except Exception as e:
+                        print("\tALERT: {} NOT REMOVED. EXCEPTION! {}".format(full_file_path, e))
 
             for file in files:
 
@@ -51,9 +54,12 @@ def main():
                 duration_since_file_last_modified = now - datetime.datetime.fromtimestamp(time_file_last_modified)
                 is_older_than_five_days = duration_since_file_last_modified > FIVE_DAYS_TIME
                 if is_older_than_five_days:
-                    os.remove(full_file_path)
-                    print("\tFILE: {} has been removed. Age: {}".format(full_file_path, duration_since_file_last_modified))
-                    
+                    try:
+                        os.remove(full_file_path)
+                        print("FILE: {} REMOVED. Age: {}".format(full_file_path, duration_since_file_last_modified))
+                    except Exception as e:
+                        print("\tALERT: {} NOT REMOVED. EXCEPTION! {}".format(full_file_path, e))
+
     except IOError as io_err:
         print(io_err)
         exit()
