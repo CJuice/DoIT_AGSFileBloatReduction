@@ -11,8 +11,9 @@ Revisions:
 
 
 def main():
-    import os
     import datetime
+    import os
+    import shutil
 
     # root_project_path = os.path.dirname(__file__)   # DEVELOPMENT
     # DIRECTORY_TO_EXAMINE = os.path.join(root_project_path, "Files_For_Testing")    # DEVELOPMENT
@@ -29,7 +30,7 @@ def main():
             for item in DIRECTORIES_TO_SKIP:
                 if item in dirnames:
                     dirnames.remove(item)
-                    print("\t\tWill not be evaluated: {}".format(item))
+                    print("\tWill not be evaluated: {}".format(item))
                     print("\t\tRemaining dirnames for consideration: {}".format(dirnames))
 
             # For each directory, look at the residing folders and files. Begin with folders first.
@@ -41,10 +42,12 @@ def main():
                 is_older_than_five_days = duration_since_folder_last_modified > FIVE_DAYS_TIME
                 if is_older_than_five_days:
                     try:
-                        os.remove(full_folder_path)
+                        # Note: os.remove() supposedly doesn't work on folders. os.removedirs() doesn't work on
+                        #   non-empty folders. Use shutil.rmtree() to remove folders with content.
+                        shutil.rmtree(full_folder_path)
                         print("FOLDER: {} REMOVED. Age: {}".format(full_folder_path, duration_since_folder_last_modified))
                     except Exception as e:
-                        print("\tALERT: {} NOT REMOVED. EXCEPTION! {}".format(full_file_path, e))
+                        print("\tALERT: {} NOT REMOVED. EXCEPTION! {}".format(full_folder_path, e))
 
             for file in files:
 
